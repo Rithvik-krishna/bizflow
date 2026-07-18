@@ -19,7 +19,10 @@ function getClient(): PrismaClient {
           globalForPrisma.prisma = client;
         }
       } catch (e) {
-        console.warn("Failed to initialize Prisma Client lazily.", e);
+        // Suppress verbose stack trace logs in Vercel or production environments
+        if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+          console.warn("Failed to initialize Prisma Client lazily. Using mock database fallback.", e);
+        }
         client = null as unknown as PrismaClient;
       }
     }
