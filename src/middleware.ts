@@ -3,16 +3,18 @@ import { NextResponse } from 'next/server'
 
 const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)', '/api/public(.*)'])
 
-export default clerkMiddleware(async (auth: any, request: any) => {
-  // If Clerk publishable key is missing, bypass auth entirely
+export default function middleware(request: any, event: any) {
+  // If Clerk publishable key is missing, bypass auth entirely without initializing Clerk
   if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
     return NextResponse.next()
   }
 
-  if (!isPublicRoute(request)) {
-    await auth.protect()
-  }
-})
+  return clerkMiddleware(async (auth: any, req: any) => {
+    if (!isPublicRoute(req)) {
+      await auth.protect()
+    }
+  })(request, event)
+}
 
 export const config = {
   matcher: [
