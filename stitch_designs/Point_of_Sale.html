@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BizFlow POS - High-Speed Billing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c3c6d7;
+            border-radius: 10px;
+        }
+        .pos-grid-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-surface": "#213145",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#bdffdb",
+                        "on-secondary-fixed": "#001a42",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-variant": "#d3e4fe",
+                        "outline": "#737686",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-tint": "#0053db",
+                        "secondary-container": "#2170e4",
+                        "tertiary-container": "#007d55",
+                        "surface-dim": "#cbdbf5",
+                        "inverse-primary": "#b4c5ff",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed-variant": "#004395",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "secondary": "#0058be",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#fefcff",
+                        "on-surface": "#0b1c30",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-primary-container": "#eeefff",
+                        "tertiary": "#006242",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#dbe1ff",
+                        "surface": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "surface-bright": "#f8f9ff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#002113",
+                        "error-container": "#ffdad6",
+                        "on-background": "#0b1c30",
+                        "surface-container-high": "#dce9ff",
+                        "outline-variant": "#c3c6d7"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "sidebar-width": "260px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden h-screen flex">
+<!-- Side Navigation Bar (Shared Component Anchor) -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest border-r border-outline-variant shadow-sm flex flex-col z-50">
+<div class="px-6 py-8">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">BizFlow</h1>
+<p class="text-[10px] uppercase tracking-wider text-outline mt-1">Enterprise Operations</p>
+</div>
+<nav class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Navigation Items mapping from JSON -->
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-primary font-bold border-l-4 border-primary bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-body-md">Sales Orders</span>
+</a>
+<!-- Simplified for focus on POS layout -->
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-body-md">AI Assistant</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">add</span>
+                New Order
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-sidebar-width flex flex-col h-screen overflow-hidden">
+<!-- Top Navigation Bar (Shared Component Anchor) -->
+<header class="h-16 flex items-center justify-between px-lg bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant z-40">
+<div class="flex items-center gap-6">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-body-sm focus:ring-2 focus:ring-primary/20" placeholder="Search products or scan barcode..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary cursor-pointer">barcode_scanner</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container transition-all rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container-low border border-outline-variant cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs">JD</div>
+<div class="hidden lg:block text-left">
+<p class="text-[12px] font-bold leading-none">John Doe</p>
+<p class="text-[10px] text-outline">Store Manager</p>
+</div>
+</div>
+</div>
+</header>
+<!-- POS Workspace -->
+<div class="flex-1 flex overflow-hidden p-6 gap-6">
+<!-- Left Panel: Product Selection -->
+<section class="flex-[3] flex flex-col gap-6 overflow-hidden">
+<!-- Quick Selection Categories -->
+<div class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+<button class="px-4 py-2 rounded-full bg-primary text-on-primary font-label-md whitespace-nowrap">All Items</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap hover:bg-surface-container transition-all">Electronics</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap hover:bg-surface-container transition-all">Groceries</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap hover:bg-surface-container transition-all">Apparel</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap hover:bg-surface-container transition-all">Home Decor</button>
+</div>
+<!-- Product Grid -->
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
+<!-- Product Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3 flex flex-col gap-2 cursor-pointer transition-all pos-grid-hover group">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A clean, studio-lit commercial product shot of a high-end stainless steel water bottle, minimalist aesthetic, royal blue accents, soft ambient shadows, luxury retail photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaDu-pjFOa6q0PclGehd3pgvV_TCOrAEw-0uC46htdiu5k29CpD18jeAVRBOZMNBGJVO321Af7rwWMBMEihYDf1F0TZdwi2iPbdDZv8PEDI43g00lQ2uIzQFuI40rna3N_PGqPddXaAqrki-lTgj7euKDua95G_O_zxbKiLklbTe5isaRlwjv9BXBKmqLG3-fbfEoyTuITKqqJErL0sJsIlRSDu0RFIRFaA69wkcMCGXCU0Ju-V0pMSA"/>
+<span class="absolute top-2 right-2 bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-[10px] font-bold">In Stock: 42</span>
+</div>
+<div>
+<p class="text-label-md font-bold truncate">Premium Hydra Bottle</p>
+<p class="text-body-sm text-outline">$24.00</p>
+</div>
+<button class="w-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary py-2 rounded-lg text-body-sm font-bold transition-all flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add to Bill
+                            </button>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3 flex flex-col gap-2 cursor-pointer transition-all pos-grid-hover group">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up professional product photography of wireless noise-canceling headphones, matte black finish, elegant lighting highlighting sleek curves, tech-focused clean aesthetic, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbCpjN5bylE31F-WQ3_INlNFP_YEg-kmKFzirQr6aqFkJgwDPHNEKwHUcgQD2X4i8khjrFdyGS4t9GFuPrX2CHspyZIxOgnY8kliCYZDZUOw0U0NkS2d4XnUx9JhKcRc-uZJ5VE_vVHECKbxBmTmPnDfInGB0ME8dH2zy1QXEEyR-UEp-T8YsYDGP0qtrKPaR_JJjs9AVSgcfFPNTJx1s-lrTLayHl90dX7wMlOhQRO03juERAvvmU_A"/>
+<span class="absolute top-2 right-2 bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-[10px] font-bold">In Stock: 12</span>
+</div>
+<div>
+<p class="text-label-md font-bold truncate">Acoustic Pro X1</p>
+<p class="text-body-sm text-outline">$199.00</p>
+</div>
+<button class="w-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary py-2 rounded-lg text-body-sm font-bold transition-all flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add to Bill
+                            </button>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3 flex flex-col gap-2 cursor-pointer transition-all pos-grid-hover group">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Modern organic cotton t-shirt folded neatly on a light wood surface, soft natural lighting, high quality fabric texture visible, minimalist lifestyle product photography, serene mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzuAD5ENjowaX6iau4wU-22V6fH8h79xVYh3sbHMVpjT6ISdvPVr2up3Iq6KMVKxrVjWjIfbsc2jujmh2LtpOmqupQiGQMFU3c-DTBVm9ZlIG12kArDorZJ8tViDsZpT2Dz9r3O6OPTdS46oIds1cuYTM1JrWvqm97DznhHMSSM4t4iyTEXwGCN7-s-donpJrWHXhO2R5TVuN1gwNpzif-Noq2MKcQHOESyukqrpXz3LIFMsluUrvmZA"/>
+<span class="absolute top-2 right-2 bg-error/10 text-error px-2 py-0.5 rounded text-[10px] font-bold">Low Stock: 3</span>
+</div>
+<div>
+<p class="text-label-md font-bold truncate">Essential Tee</p>
+<p class="text-body-sm text-outline">$32.00</p>
+</div>
+<button class="w-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary py-2 rounded-lg text-body-sm font-bold transition-all flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add to Bill
+                            </button>
+</div>
+<!-- More Product Cards (Replicated for visual density) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3 flex flex-col gap-2 cursor-pointer transition-all pos-grid-hover group opacity-80">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden relative">
+<div class="w-full h-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-outline-variant">image</span>
+</div>
+</div>
+<div>
+<p class="text-label-md font-bold truncate">Daily Planner 2024</p>
+<p class="text-body-sm text-outline">$18.50</p>
+</div>
+<button class="w-full bg-surface-container-low py-2 rounded-lg text-body-sm font-bold opacity-50 cursor-not-allowed">Out of Stock</button>
+</div>
+<!-- Card loop simulation -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3 flex flex-col gap-2 cursor-pointer transition-all pos-grid-hover group">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Sleek ceramic coffee mug with a minimalist geometric pattern, warm morning sunlight, vapor rising, cozy cafe atmosphere, high-end lifestyle photography, neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjIb8T8D31NLqlVIkesm-t5VCfBYAOTZ__O9WfOu79JnRZpl51X6uSvC53hnG8TwI1Yt6QKce5Sue-_uBtt-9JD8mrAPglApwwXnaJ41cI67X9fZsVfaHIDYTdXPiphi3pye7TXe01IqyJJmXdToMau__fQVT50JTiiPil5_n2nL7GTzD9WWxJh3GB_eJjtQs9tDBbIuHd_a5Hx4IFOdulq4FeaQ9JJH4frmZ0ctlGL2X2WF9SilpqBw"/>
+<span class="absolute top-2 right-2 bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-[10px] font-bold">In Stock: 88</span>
+</div>
+<div>
+<p class="text-label-md font-bold truncate">Geo Mug Matte</p>
+<p class="text-body-sm text-outline">$12.00</p>
+</div>
+<button class="w-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary py-2 rounded-lg text-body-sm font-bold transition-all flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add to Bill
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Panel: Checkout / Cart -->
+<section class="flex-[2] bg-surface-container-lowest border border-outline-variant rounded-3xl flex flex-col overflow-hidden shadow-xl">
+<!-- Customer Selection -->
+<div class="p-6 border-b border-outline-variant bg-surface-container-low/50">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Current Order</h2>
+<span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded font-bold">ID: #49283</span>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">person_add</span>
+<input class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-sm focus:ring-2 focus:ring-primary/20" placeholder="Add customer..." type="text"/>
+</div>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-primary">history</span>
+</button>
+</div>
+</div>
+<!-- Cart Items List -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4">
+<!-- Cart Item -->
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Product thumbnail of a high-end stainless steel water bottle, minimalist design, royal blue color, studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvvc5qfJIVct9MNCFdoJFecardllPobc4IRmT18wSorRvAzc3Q3D3uXKynyRxe7WJxmgYPU4jqpFUKuMu9g3P8KAgi7ok43xHnBX1EPzuzB4Lj1TKLD7qOqQsXYYxK1-rW84r4y8hSjq5dj50Pk_GE6uGU0aZG16r5U0PvthRF3CgQD-PwHaaZ3_CFLEO5IAlNCHW3yNvnzrCzUdZk49T_fQDSWGpnaJ2IN59CTMwcvddz3X1BRPvl_w"/>
+</div>
+<div class="flex-1">
+<p class="text-body-sm font-bold truncate">Premium Hydra Bottle</p>
+<p class="text-xs text-outline">SKU: HYD-001</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center border border-outline-variant rounded-lg overflow-hidden">
+<button class="px-2 py-1 hover:bg-surface-container transition-all"><span class="material-symbols-outlined text-sm">remove</span></button>
+<span class="px-2 py-1 text-xs font-bold w-8 text-center">02</span>
+<button class="px-2 py-1 hover:bg-surface-container transition-all"><span class="material-symbols-outlined text-sm">add</span></button>
+</div>
+<p class="text-body-sm font-bold w-16 text-right">$48.00</p>
+<button class="text-outline hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<!-- Cart Item 2 -->
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Product thumbnail of wireless noise-canceling headphones, matte black, studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwSZywJoqm1rBo6btkm710mFUCkAr3xjpV18cAKA75VAiaaBPnHUvZyQYBgg5s1emecpoYSJgv_rvxRDTEmAHTga_v6h2bP4xa1dQyxj6iu9Rh2MrTVoPuJCJal6p-qYFB9u-gSRKmyG3-VlIxdl6KHFZ9afP_BSTEy-dw8JqOlKlxSbpkol7XwEQCJxM8P_lYA2o9proNBX7DWCZKKziJPoT_7G8LkGY55Ii0B1sF9CjmWtWwyzFKMQ"/>
+</div>
+<div class="flex-1">
+<p class="text-body-sm font-bold truncate">Acoustic Pro X1</p>
+<p class="text-xs text-outline">SKU: AUD-990</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center border border-outline-variant rounded-lg overflow-hidden">
+<button class="px-2 py-1 hover:bg-surface-container transition-all"><span class="material-symbols-outlined text-sm">remove</span></button>
+<span class="px-2 py-1 text-xs font-bold w-8 text-center">01</span>
+<button class="px-2 py-1 hover:bg-surface-container transition-all"><span class="material-symbols-outlined text-sm">add</span></button>
+</div>
+<p class="text-body-sm font-bold w-16 text-right">$199.00</p>
+<button class="text-outline hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Bill Totals & Checkout -->
+<div class="p-6 border-t border-outline-variant space-y-4 bg-surface-container-low/20">
+<div class="space-y-2">
+<div class="flex justify-between text-body-sm">
+<span class="text-outline">Subtotal</span>
+<span class="font-medium">$247.00</span>
+</div>
+<div class="flex justify-between text-body-sm">
+<span class="text-outline">GST (18%)</span>
+<span class="font-medium">$44.46</span>
+</div>
+<div class="flex justify-between text-body-sm text-tertiary">
+<span>Discount</span>
+<span class="font-medium">-$10.00</span>
+</div>
+<div class="flex justify-between text-headline-sm font-bold border-t border-outline-variant pt-2 mt-2">
+<span>Total</span>
+<span class="text-primary">$281.46</span>
+</div>
+</div>
+<!-- Payment Methods Selection -->
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center gap-1 p-2 rounded-xl border-2 border-primary bg-primary/5 transition-all">
+<span class="material-symbols-outlined text-primary">payments</span>
+<span class="text-[10px] font-bold uppercase">Cash</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 rounded-xl border-2 border-transparent bg-surface-container transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-outline">credit_card</span>
+<span class="text-[10px] font-bold uppercase">Card</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 rounded-xl border-2 border-transparent bg-surface-container transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-outline">qr_code_2</span>
+<span class="text-[10px] font-bold uppercase">UPI</span>
+</button>
+</div>
+<!-- Checkout Button -->
+<button class="w-full bg-primary text-on-primary py-5 rounded-2xl font-headline-sm flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        CHECKOUT
+                        <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Micro-interaction / Scanning Animation Overlay (Hidden by default) -->
+<div class="hidden fixed inset-0 z-[100] pointer-events-none flex items-center justify-center" id="scanner-active">
+<div class="w-full h-1 bg-primary/50 relative overflow-hidden">
+<div class="absolute inset-0 bg-primary w-1/4 animate-[scan_2s_infinite]"></div>
+</div>
+</div>
+<style>
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+    </style>
+<script>
+        // Simple logic for interactive elements
+        document.querySelectorAll('.pos-grid-hover').forEach(card => {
+            card.addEventListener('click', () => {
+                // Add visual feedback
+                card.classList.add('ring-2', 'ring-primary');
+                setTimeout(() => card.classList.remove('ring-2', 'ring-primary'), 500);
+            });
+        });
+
+        // Simulating Barcode Scan trigger
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' && e.ctrlKey) { // Mock shortcut for scan
+                const scanner = document.getElementById('scanner-active');
+                scanner.classList.remove('hidden');
+                setTimeout(() => scanner.classList.add('hidden'), 1500);
+            }
+        });
+    </script>
+</body></html>

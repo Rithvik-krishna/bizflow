@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BizFlow AI Assistant - Operational Insight Engine</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "background": "#f8f9ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary": "#0058be",
+                    "surface-bright": "#f8f9ff",
+                    "primary": "#004ac6",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-highest": "#d3e4fe",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-container": "#bdffdb",
+                    "on-secondary-container": "#fefcff",
+                    "surface-dim": "#cbdbf5",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary-container": "#eeefff",
+                    "on-background": "#0b1c30",
+                    "on-surface": "#0b1c30",
+                    "surface-container-low": "#eff4ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface": "#f8f9ff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#6ffbbe",
+                    "outline": "#737686",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container": "#e5eeff",
+                    "surface-tint": "#0053db",
+                    "on-primary-fixed": "#00174b",
+                    "secondary-container": "#2170e4",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#001a42",
+                    "on-secondary-fixed-variant": "#004395",
+                    "primary-container": "#2563eb",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary": "#006242",
+                    "tertiary-container": "#007d55",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dce9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "2xl": "48px",
+                    "sidebar-collapsed": "72px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "container-max": "1440px",
+                    "gutter": "24px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "sidebar-width": "260px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 74, 198, 0.1);
+        }
+        .glow-accent {
+            box-shadow: 0 0 15px rgba(0, 74, 198, 0.15);
+        }
+        .ai-message-gradient {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e5eeff 100%);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest border-r border-outline-variant flex flex-col z-50">
+<div class="px-lg py-xl">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">insights</span>
+            BizFlow
+        </h1>
+<p class="text-label-sm text-on-surface-variant/70 mt-1">Operational Engine</p>
+</div>
+<nav class="flex-1 overflow-y-auto scrollbar-hide">
+<div class="px-md pb-md">
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-l-4 border-primary bg-surface-container-low rounded-r-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-md">Insight Engine</span>
+</a>
+</div>
+</div>
+<div class="px-lg py-md border-t border-outline-variant mt-4">
+<h3 class="text-label-sm uppercase tracking-wider text-outline font-bold mb-4">Operations Log</h3>
+<div class="space-y-3">
+<div class="group cursor-pointer p-2 rounded-lg hover:bg-surface-container transition-all">
+<p class="text-label-md font-semibold truncate">Q4 Stock Predictions</p>
+<p class="text-label-sm text-on-surface-variant">2 hours ago</p>
+</div>
+<div class="group cursor-pointer p-2 rounded-lg hover:bg-surface-container transition-all">
+<p class="text-label-md font-semibold truncate">Supplier Risk Analysis</p>
+<p class="text-label-sm text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+</div>
+</nav>
+<div class="p-lg border-t border-outline-variant">
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">add</span>
+            New Order
+        </button>
+</div>
+</aside>
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 z-40 flex justify-between items-center h-16 w-[calc(100%-260px)] ml-auto px-lg bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Ask about stocks, payments, or sales..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 px-3 py-1.5 hover:bg-surface-container rounded-lg cursor-pointer transition-all">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXeubaq66y4lFxSDzMUINzWZuq9iVQ3fqXZIL7iTNBjXGEHixYa9qD9s_A6BfLxKaExatt7H6W9PAXHQl5jKbpq25hkp3E-m37wg9rs1_rim3RALMT9ueY4EH51BmVQ7taSelxz5M9hLwzf-tYMeXwlFFMKKUnJgRDfabFGd66AZ1dQCEheK-9gopGrEkMryjue7IVbIF-L1TaBcms_ISZUDSI1vUL9dstRX6SAyZ9rfN-XRcYWOyTuA"/>
+</div>
+<div class="hidden lg:block">
+<p class="text-label-sm font-bold leading-none">Sarah Jenkins</p>
+<p class="text-[10px] text-on-surface-variant">Global Logistics</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area: Insight Engine Layout -->
+<main class="ml-[260px] pt-16 h-screen flex relative overflow-hidden bg-background">
+<!-- Left Column: Insights & Recommendations -->
+<div class="w-2/5 h-full overflow-y-auto border-r border-outline-variant p-lg space-y-6 scrollbar-hide">
+<!-- Section: Operational Insights Panel -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-label-md font-bold text-primary flex items-center gap-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">emergency_home</span>
+                    Operational Insights
+                </h2>
+<span class="text-[10px] bg-error/10 text-error font-bold px-2 py-0.5 rounded-full">3 Alerts</span>
+</div>
+<div class="space-y-3">
+<div class="bg-error-container/20 border border-error/10 p-4 rounded-xl flex gap-3 items-start">
+<span class="material-symbols-outlined text-error">warning</span>
+<div>
+<p class="text-label-md font-bold text-on-background">Stock Warning</p>
+<p class="text-body-sm text-on-surface-variant">5 products will go out of stock in 7 days</p>
+<button class="mt-2 text-label-sm font-bold text-primary underline">Review List</button>
+</div>
+</div>
+<div class="bg-secondary-container/10 border border-secondary/10 p-4 rounded-xl flex gap-3 items-start">
+<span class="material-symbols-outlined text-secondary">payments</span>
+<div>
+<p class="text-label-md font-bold text-on-background">Account Receivables</p>
+<p class="text-body-sm text-on-surface-variant">3 customers have overdue payments</p>
+<button class="mt-2 text-label-sm font-bold text-primary underline">Send Reminders</button>
+</div>
+</div>
+<div class="bg-surface-container-high border border-outline-variant p-4 rounded-xl flex gap-3 items-start">
+<span class="material-symbols-outlined text-outline">trending_down</span>
+<div>
+<p class="text-label-md font-bold text-on-background">Performance Shift</p>
+<p class="text-body-sm text-on-surface-variant">Sales down 12% this week compared to last</p>
+<button class="mt-2 text-label-sm font-bold text-primary underline">View Analytics</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Purchase Recommendations -->
+<section>
+<h2 class="text-label-md font-bold text-primary flex items-center gap-2 mb-4 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">shopping_cart_checkout</span>
+                Purchase Recommendations
+            </h2>
+<div class="bg-surface-container-lowest border border-primary/10 rounded-2xl p-lg shadow-sm">
+<div class="flex justify-between items-center mb-4">
+<div>
+<h3 class="text-headline-sm font-bold">Rice Bags</h3>
+<p class="text-label-sm text-on-surface-variant">SKU: RB-001-N</p>
+</div>
+<div class="text-right">
+<p class="text-label-sm text-outline">Month Sales</p>
+<p class="text-label-md font-bold">120 units</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-surface-container p-3 rounded-xl">
+<p class="text-label-sm text-outline">Current Stock</p>
+<p class="text-headline-sm font-bold text-error">20</p>
+</div>
+<div class="bg-primary/5 p-3 rounded-xl">
+<p class="text-label-sm text-outline">Recommended</p>
+<p class="text-headline-sm font-bold text-primary">+100</p>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+                    Create Reorder Request
+                </button>
+</div>
+</section>
+<!-- Section: Voice Command Shortcuts -->
+<section>
+<h2 class="text-label-md font-bold text-outline flex items-center gap-2 mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+                Voice Commands
+            </h2>
+<div class="space-y-2">
+<button class="w-full text-left p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-all text-body-sm text-on-surface-variant italic">
+                    "Add 50 bags of cement to the warehouse inventory"
+                </button>
+<button class="w-full text-left p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-all text-body-sm text-on-surface-variant italic">
+                    "Show pending payments from North Region clients"
+                </button>
+</div>
+</section>
+</div>
+<!-- Right Column: Chat Assistant (Secondary) -->
+<div class="flex-1 flex flex-col h-full bg-surface-container-lowest/30">
+<!-- Chat Messages -->
+<div class="flex-1 overflow-y-auto p-lg space-y-6 scrollbar-hide" id="chat-messages">
+<!-- AI Message -->
+<div class="max-w-xl flex gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[18px]">smart_toy</span>
+</div>
+<div class="ai-message-gradient p-4 rounded-2xl rounded-tl-none border border-primary/10 shadow-sm">
+<p class="text-body-sm">I've analyzed the current flow. The 5 products at risk in the North Region are primarily staples. Would you like me to prepare the purchase orders for them?</p>
+</div>
+</div>
+<!-- User Message -->
+<div class="max-w-xl ml-auto flex gap-3 flex-row-reverse">
+<div class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[18px]">person</span>
+</div>
+<div class="bg-primary text-on-primary p-4 rounded-2xl rounded-tr-none shadow-md">
+<p class="text-body-sm">Can you identify the specific products at highest risk in the North Region?</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-lg bg-white/50 backdrop-blur-xl border-t border-outline-variant">
+<!-- Suggested Prompts -->
+<div class="flex gap-2 mb-4 overflow-x-auto scrollbar-hide">
+<button class="whitespace-nowrap px-3 py-1.5 rounded-full border border-primary/20 bg-white text-primary text-label-sm font-semibold hover:bg-primary/5 transition-all">
+                    Low stock details
+                </button>
+<button class="whitespace-nowrap px-3 py-1.5 rounded-full border border-primary/20 bg-white text-primary text-label-sm font-semibold hover:bg-primary/5 transition-all">
+                    Late payment report
+                </button>
+</div>
+<div class="glass-panel p-3 rounded-2xl glow-accent flex items-end gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">attach_file</span></button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 text-body-sm resize-none py-2 placeholder:text-outline" placeholder="Type or use voice command..." rows="1"></textarea>
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">mic</span></button>
+<button class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">send</span></button>
+</div>
+<p class="text-center text-[9px] text-outline mt-3 uppercase tracking-widest">Enterprise Insight Engine • Powered by BizFlow AI</p>
+</div>
+</div>
+</main>
+<script>
+    const chatContainer = document.getElementById('chat-messages');
+    window.addEventListener('load', () => {
+        chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+    });
+</script>
+</body></html>

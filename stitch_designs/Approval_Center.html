@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BizFlow Approval Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e5eeff",
+                    "error": "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#00174b",
+                    "inverse-surface": "#213145",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-tertiary-container": "#bdffdb",
+                    "on-secondary-fixed": "#001a42",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-variant": "#d3e4fe",
+                    "outline": "#737686",
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-tint": "#0053db",
+                    "secondary-container": "#2170e4",
+                    "tertiary-container": "#007d55",
+                    "surface-dim": "#cbdbf5",
+                    "inverse-primary": "#b4c5ff",
+                    "primary": "#004ac6",
+                    "on-secondary-fixed-variant": "#004395",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "secondary": "#0058be",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#fefcff",
+                    "on-surface": "#0b1c30",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-primary-container": "#eeefff",
+                    "tertiary": "#006242",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dbe1ff",
+                    "surface": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#434655",
+                    "surface-bright": "#f8f9ff",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-fixed": "#002113",
+                    "error-container": "#ffdad6",
+                    "on-background": "#0b1c30",
+                    "surface-container-high": "#dce9ff",
+                    "outline-variant": "#c3c6d7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "2xl": "48px",
+                    "sidebar-collapsed": "72px",
+                    "sm": "8px",
+                    "sidebar-width": "260px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "container-max": "1440px",
+                    "xl": "32px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-item-active { border-left-width: 4px; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .approval-card:hover { transform: translateY(-2px); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c3c6d7; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Side Navigation Shell (from JSON) -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface border-r border-outline-variant shadow-sm flex flex-col p-md gap-sm z-50">
+<div class="mb-lg px-md">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">BizFlow</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">Enterprise OS</p>
+</div>
+<nav class="flex-1 space-y-xs overflow-y-auto custom-scrollbar">
+<!-- Finance -->
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors group" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Finance</span>
+</a>
+<!-- Multi-Branch -->
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-label-md text-label-md">Multi-Branch</span>
+</a>
+<!-- Warehouse -->
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<!-- Suppliers -->
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">handshake</span>
+<span class="font-label-md text-label-md">Suppliers</span>
+</a>
+<!-- Staff -->
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-label-md text-label-md">Staff</span>
+</a>
+<!-- Approvals (ACTIVE) -->
+<a class="flex items-center gap-md bg-secondary-container text-on-secondary-container rounded-lg px-md py-sm border-l-4 border-primary transition-transform duration-150 scale-[0.98]" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-md text-label-md">Approvals</span>
+</a>
+<!-- POS -->
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-md space-y-xs">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar (from JSON) -->
+<header class="fixed top-0 right-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-gutter ml-sidebar-width w-[calc(100%-theme(spacing.sidebar-width))]">
+<div class="flex items-center gap-xl">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Approval Center</h2>
+<div class="hidden md:flex gap-lg">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary" href="#">Dashboard</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary" href="#">Analytics</a>
+<a class="font-label-sm text-label-sm text-primary font-bold border-b-2 border-primary" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary w-64 outline-none" placeholder="Search approvals..." type="text"/>
+</div>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant bg-surface-container ml-2">
+<img class="w-full h-full object-cover" data-alt="Close-up professional studio portrait of a corporate executive in a modern office, soft bokeh lighting with blue and white tones, clean minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8iVmQ1Y-vuiGZ4k1twjtHoI-xWDT0qqZ2e3mEUyH69_E6hvSY2h9ewnOs2PFyraCCW3qzDwCFZutxQR6wcnFhCwEulXfxDnPnNcx0Nu-36oY8NABtDUlP21RCTKfy0Yjw6AGqd7-2Mi6OxhMjDXRG92AivUjgh9ipmDNiDEzpzeq14THOxNvjyswAyKyXOkj00TUEwy6xgEuD_G7GK1YZtkNzOY0qv7A-EJ9i6oYKER4CV9loZUDUUA"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width pt-16 min-h-screen">
+<div class="p-gutter max-w-container-max mx-auto">
+<!-- Page Stats & Filters -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md mb-xl">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Workflow Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Review and manage organizational pending requests and status history.</p>
+</div>
+<div class="flex items-center gap-sm">
+<div class="flex bg-surface-container-low p-1 rounded-lg border border-outline-variant">
+<button class="px-md py-1.5 rounded-md font-label-md text-label-md bg-white shadow-sm text-primary">Pending (12)</button>
+<button class="px-md py-1.5 rounded-md font-label-md text-label-md text-on-surface-variant hover:bg-surface-container">Approved</button>
+<button class="px-md py-1.5 rounded-md font-label-md text-label-md text-on-surface-variant hover:bg-surface-container">Rejected</button>
+</div>
+<button class="flex items-center gap-xs px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filter
+                    </button>
+</div>
+</div>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-12 gap-lg">
+<!-- Request List Column -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-md">
+<div class="flex items-center justify-between mb-xs">
+<h3 class="font-label-md text-label-md text-outline uppercase tracking-wider">Pending Requests</h3>
+<span class="text-xs font-medium text-primary bg-primary-container px-2 py-0.5 rounded-full">12 New</span>
+</div>
+<!-- List Container -->
+<div class="space-y-md">
+<!-- Request Card 1 -->
+<div class="approval-card bg-white border-2 border-primary rounded-xl p-md shadow-lg transition-all cursor-pointer ring-2 ring-primary/10">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="h-10 w-10 rounded-full bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">shopping_cart</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Purchase Order #8821</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Sarah Jenkins • Inventory Dept</p>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container text-[10px] font-bold uppercase px-2 py-1 rounded-md">Urgent</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant mb-1">Requested Amount</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">$12,450.00</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-on-surface-variant mb-1">Time Elapsed</p>
+<p class="font-label-sm text-label-sm text-on-surface">2h 15m</p>
+</div>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="approval-card bg-white border border-outline-variant rounded-xl p-md shadow-sm hover:shadow-md transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="h-10 w-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Stock Adjustment</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Marcus Reed • Warehouse A</p>
+</div>
+</div>
+<span class="bg-surface-container text-on-surface-variant text-[10px] font-bold uppercase px-2 py-1 rounded-md">Normal</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant mb-1">Adjustment Value</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">-$1,200.00</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-on-surface-variant mb-1">Time Elapsed</p>
+<p class="font-label-sm text-label-sm text-on-surface">5h 40m</p>
+</div>
+</div>
+</div>
+<!-- Request Card 3 -->
+<div class="approval-card bg-white border border-outline-variant rounded-xl p-md shadow-sm hover:shadow-md transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="h-10 w-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">percent</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Large Discount Override</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Elena Vance • Enterprise Sales</p>
+</div>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary font-bold text-[10px] uppercase px-2 py-1 rounded-md">High</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant mb-1">Discount Amount</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">25% ($4,500)</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-on-surface-variant mb-1">Time Elapsed</p>
+<p class="font-label-sm text-label-sm text-on-surface">1d 2h</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detail View Column -->
+<div class="col-span-12 lg:col-span-7 space-y-lg">
+<!-- Selected Request Detail -->
+<div class="bg-white border border-outline-variant rounded-2xl shadow-sm overflow-hidden flex flex-col">
+<div class="bg-surface-container/30 px-xl py-lg border-b border-outline-variant flex justify-between items-center">
+<div>
+<span class="text-xs font-bold text-primary tracking-widest uppercase mb-1 block">Request Details</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Purchase Order #8821</h2>
+</div>
+<div class="flex gap-sm">
+<button class="h-10 w-10 flex items-center justify-center border border-outline-variant rounded-full hover:bg-white transition-colors">
+<span class="material-symbols-outlined">print</span>
+</button>
+<button class="h-10 w-10 flex items-center justify-center border border-outline-variant rounded-full hover:bg-white transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<div class="p-xl grid grid-cols-1 md:grid-cols-2 gap-xl">
+<!-- Info Section -->
+<div class="space-y-lg">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Reason for Purchase</p>
+<p class="font-body-md text-body-md text-on-surface bg-surface-container-low p-md rounded-xl border border-outline-variant/30">
+                                        Urgent restocking of high-demand server components for the Q4 Enterprise Expansion project. Vendor price lock expires in 48 hours.
+                                    </p>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Requester</p>
+<p class="font-label-md text-label-md text-on-surface">Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant">Senior Procurement</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Department</p>
+<p class="font-label-md text-label-md text-on-surface">Inventory Control</p>
+<p class="text-xs text-on-surface-variant">ID: DEPT-IVN-004</p>
+</div>
+</div>
+<div class="p-md bg-primary/5 rounded-xl border border-primary/10">
+<div class="flex justify-between items-center">
+<p class="font-label-sm text-label-sm text-primary">Budget Availability</p>
+<span class="text-[10px] font-bold text-tertiary bg-tertiary-fixed/20 px-2 py-0.5 rounded-full">IN BUDGET</span>
+</div>
+<div class="mt-sm w-full bg-outline-variant h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 65%;"></div>
+</div>
+<p class="mt-2 text-[11px] text-on-surface-variant">Remaining Dept Budget: $45,000.00</p>
+</div>
+</div>
+<!-- Timeline Section -->
+<div class="flex flex-col">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-md">Approval Timeline</p>
+<div class="relative pl-6 space-y-lg before:content-[''] before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant">
+<!-- Step 1 -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1.5 w-4 h-4 rounded-full bg-tertiary border-2 border-white"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface leading-tight">Request Submitted</p>
+<p class="text-xs text-on-surface-variant">Oct 24, 09:15 AM • Sarah J.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1.5 w-4 h-4 rounded-full bg-tertiary border-2 border-white"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface leading-tight">Budget Validation</p>
+<p class="text-xs text-on-surface-variant">Oct 24, 09:45 AM • Auto-Approve</p>
+</div>
+</div>
+<!-- Step 3 (Current) -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1.5 w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20 border-2 border-white"></div>
+<div>
+<p class="font-label-md text-label-md text-primary leading-tight">Management Approval</p>
+<p class="text-xs text-on-surface-variant">Pending Action • You</p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="relative opacity-40">
+<div class="absolute -left-[23px] top-1.5 w-4 h-4 rounded-full bg-outline-variant border-2 border-white"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface leading-tight">Procurement Release</p>
+<p class="text-xs text-on-surface-variant">Awaiting Step 3</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="px-xl py-lg bg-surface-container-low border-t border-outline-variant flex flex-col md:flex-row gap-md justify-between items-center">
+<div class="flex items-center gap-md">
+<button class="px-xl py-3 bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:shadow-lg hover:shadow-primary/30 transition-all flex items-center gap-sm" id="approveBtn">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                    Approve Request
+                                </button>
+<button class="px-lg py-3 border border-outline text-on-surface-variant rounded-xl font-label-md text-label-md hover:bg-surface-container transition-all flex items-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+                                    Escalate
+                                </button>
+</div>
+<button class="text-error font-label-md text-label-md hover:bg-error/5 px-lg py-3 rounded-xl transition-all flex items-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+                                Reject Request
+                            </button>
+</div>
+</div>
+<!-- Supplemental Bento Card: Supporting Docs -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="bg-white border border-outline-variant rounded-2xl p-lg shadow-sm">
+<h3 class="font-label-md text-label-md text-on-surface mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">attachment</span>
+                                Supporting Documents
+                            </h3>
+<div class="space-y-sm">
+<div class="flex items-center justify-between p-sm bg-surface rounded-lg border border-outline-variant/40">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-error">picture_as_pdf</span>
+<span class="text-sm font-medium">Vendor_Quote_Q4.pdf</span>
+</div>
+<button class="text-primary hover:bg-primary/5 p-1 rounded"><span class="material-symbols-outlined text-[20px]">download</span></button>
+</div>
+<div class="flex items-center justify-between p-sm bg-surface rounded-lg border border-outline-variant/40">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="text-sm font-medium">Comparison_Sheet.xlsx</span>
+</div>
+<button class="text-primary hover:bg-primary/5 p-1 rounded"><span class="material-symbols-outlined text-[20px]">download</span></button>
+</div>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded-2xl p-lg shadow-sm">
+<h3 class="font-label-md text-label-md text-on-surface mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">chat</span>
+                                Discussion
+                            </h3>
+<div class="flex items-start gap-sm mb-md">
+<div class="h-8 w-8 rounded-full bg-surface-container-highest flex-shrink-0"></div>
+<div class="bg-surface p-sm rounded-lg text-sm border border-outline-variant/40">
+<p class="font-bold text-[11px] text-primary">SARAH JENKINS</p>
+<p class="text-on-surface-variant">The vendor confirmed these are the last units at the current price point.</p>
+</div>
+</div>
+<div class="relative">
+<input class="w-full bg-surface border border-outline-variant rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Add a comment..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Mandatory Suppression Check: Rendered on Dashboard/Home equivalent) -->
+<button class="fixed bottom-lg right-lg h-14 w-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<script>
+        // Micro-interactions
+        const approveBtn = document.getElementById('approveBtn');
+        if(approveBtn) {
+            approveBtn.addEventListener('click', () => {
+                approveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing...';
+                approveBtn.classList.add('opacity-70', 'pointer-events-none');
+                
+                setTimeout(() => {
+                    approveBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Approved!';
+                    approveBtn.classList.remove('bg-primary');
+                    approveBtn.classList.add('bg-tertiary');
+                }, 1500);
+            });
+        }
+
+        // Active state hover effects logic
+        document.querySelectorAll('.approval-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.approval-card').forEach(c => {
+                    c.classList.remove('border-primary', 'ring-2', 'ring-primary/10', 'shadow-lg');
+                    c.classList.add('border-outline-variant', 'shadow-sm');
+                });
+                this.classList.add('border-primary', 'ring-2', 'ring-primary/10', 'shadow-lg');
+                this.classList.remove('border-outline-variant', 'shadow-sm');
+            });
+        });
+    </script>
+</body></html>

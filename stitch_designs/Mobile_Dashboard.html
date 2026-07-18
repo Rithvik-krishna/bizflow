@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BizFlow OS | Mobile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for horizontal containers */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#e5eeff",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#00174b",
+                      "inverse-surface": "#213145",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#f8f9ff",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "on-tertiary-container": "#bdffdb",
+                      "on-secondary-fixed": "#001a42",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-variant": "#d3e4fe",
+                      "outline": "#737686",
+                      "tertiary-fixed": "#6ffbbe",
+                      "surface-tint": "#0053db",
+                      "secondary-container": "#2170e4",
+                      "tertiary-container": "#007d55",
+                      "surface-dim": "#cbdbf5",
+                      "inverse-primary": "#b4c5ff",
+                      "primary": "#004ac6",
+                      "on-secondary-fixed-variant": "#004395",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "secondary": "#0058be",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-error-container": "#93000a",
+                      "on-secondary-container": "#fefcff",
+                      "on-surface": "#0b1c30",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "on-primary-container": "#eeefff",
+                      "tertiary": "#006242",
+                      "surface-container-highest": "#d3e4fe",
+                      "primary-fixed": "#dbe1ff",
+                      "surface": "#f8f9ff",
+                      "surface-container-low": "#eff4ff",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#434655",
+                      "surface-bright": "#f8f9ff",
+                      "primary-container": "#2563eb",
+                      "on-tertiary-fixed": "#002113",
+                      "error-container": "#ffdad6",
+                      "on-background": "#0b1c30",
+                      "surface-container-high": "#dce9ff",
+                      "outline-variant": "#c3c6d7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "2xl": "48px",
+                      "sidebar-collapsed": "72px",
+                      "sm": "8px",
+                      "sidebar-width": "260px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "md": "16px",
+                      "container-max": "1440px",
+                      "xl": "32px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-sm": ["Plus Jakarta Sans"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "display": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md text-body-md overflow-x-hidden">
+<!-- Top AppBar -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface/80 backdrop-blur-md px-md h-16 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[20px]" data-icon="account_tree">account_tree</span>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">BizFlow</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="relative p-sm text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of a business executive for a user profile, soft studio lighting, corporate attire, clean blue and white background to match the professional enterprise operating system aesthetic, 8k resolution high quality photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrNxeaRtZOPcIM-SRSz65ciDIlkOh_r_e-N6EqScmPg3oSVgCpuiIPPHgB81jJwne21i2ERdik74euh-HRPQ6Yj_GHUb9uYj5bPjCe0YvrnqrgbDWhb-gkPah-ck61Bay3w5-H-824SRGDW9alnrce08H4lHwpT84kdRwGYlGLp4KPVJjqKaMMZSkrxjVCXWIARLWCkpTpt7nLUsG6yi7XTsxu7WssAbVe8yoA4_wYB92zFPU9lBmBPA"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-20 pb-24 px-md flex flex-col gap-lg">
+<!-- Welcome Section -->
+<section>
+<p class="text-on-surface-variant font-label-md text-label-md">Good Morning, Alex</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile">Overview</h2>
+</section>
+<!-- KPI Grid -->
+<section class="grid grid-cols-2 gap-md">
+<div class="col-span-2 bg-primary-container text-on-primary-container p-md rounded-xl shadow-sm border border-primary/10">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-md text-label-md opacity-90">Today's Sales</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="payments">payments</span>
+</div>
+<div class="text-3xl font-bold tracking-tight">$12,480.00</div>
+<div class="mt-xs flex items-center gap-xs font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span>+14% from yesterday</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm">
+<div class="text-on-surface-variant font-label-md text-label-md mb-xs">Outstanding</div>
+<div class="text-headline-sm font-headline-sm text-error">$4,210</div>
+<div class="mt-sm bg-error/10 text-error px-2 py-0.5 rounded text-[10px] font-bold w-fit">8 INVOICES</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm">
+<div class="text-on-surface-variant font-label-md text-label-md mb-xs">Low Stock</div>
+<div class="text-headline-sm font-headline-sm text-tertiary">12 Items</div>
+<div class="mt-sm bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-[10px] font-bold w-fit">URGENT</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="flex gap-md overflow-x-auto hide-scrollbar -mx-md px-md">
+<button class="flex-shrink-0 flex items-center gap-sm bg-secondary text-on-secondary px-lg py-md rounded-xl font-label-md shadow-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+<span>New Order</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-sm bg-surface-container-high text-on-surface px-lg py-md rounded-xl font-label-md border border-outline-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Scan Barcode</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-sm bg-surface-container-high text-on-surface px-lg py-md rounded-xl font-label-md border border-outline-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>History</span>
+</button>
+</section>
+<!-- Revenue Trends Chart (Simulated with CSS) -->
+<section class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm">Revenue Trends</h3>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Last 7 Days</span>
+</div>
+<div class="h-32 flex items-end justify-between gap-sm pt-md px-sm">
+<div class="w-full bg-primary/20 rounded-t-sm relative group h-[40%]">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold hidden group-hover:block">$2k</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm relative group h-[65%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm relative group h-[45%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm relative group h-[85%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm relative group h-[60%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm relative group h-[95%]"></div>
+<div class="w-full bg-primary rounded-t-sm relative group h-[75%] shadow-[0_-4px_12px_rgba(0,74,198,0.3)]">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold">$12k</div>
+</div>
+</div>
+<div class="flex justify-between px-xs text-[10px] font-medium text-on-surface-variant uppercase tracking-wider">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</section>
+<!-- Recent Activity / Task List -->
+<section class="flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm">Recent Activity</h3>
+<button class="text-primary font-label-md text-label-md">View All</button>
+</div>
+<div class="flex flex-col gap-sm">
+<!-- Activity Item -->
+<div class="flex items-center gap-md p-md bg-surface-container-lowest rounded-xl border border-outline-variant">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div class="flex-1">
+<div class="font-label-md text-label-md">Order #8921-A</div>
+<div class="text-on-surface-variant text-body-sm font-body-sm">Pending payment • 12 mins ago</div>
+</div>
+<div class="font-bold text-on-surface">$1,240.00</div>
+</div>
+<!-- Activity Item -->
+<div class="flex items-center gap-md p-md bg-surface-container-lowest rounded-xl border border-outline-variant">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex-1">
+<div class="font-label-md text-label-md">Stock Restock</div>
+<div class="text-on-surface-variant text-body-sm font-body-sm">SKU: DX-900 • 2 hrs ago</div>
+</div>
+<div class="font-bold text-on-surface">+50 units</div>
+</div>
+<!-- Activity Item -->
+<div class="flex items-center gap-md p-md bg-surface-container-lowest rounded-xl border border-outline-variant">
+<div class="w-10 h-10 rounded-full bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div class="flex-1">
+<div class="font-label-md text-label-md">Payment Overdue</div>
+<div class="text-on-surface-variant text-body-sm font-body-sm">Acme Corp • 5 hrs ago</div>
+</div>
+<div class="font-bold text-error">$3,150.00</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl border-t border-outline-variant pb-safe">
+<div class="flex justify-around items-center h-16">
+<!-- Active Tab: Dashboard -->
+<button class="flex flex-col items-center justify-center w-full h-full text-primary gap-0.5">
+<span class="material-symbols-outlined active-pill" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-[11px]">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant gap-0.5 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-[11px]">Orders</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant gap-0.5 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="inventory">inventory</span>
+<span class="font-label-sm text-[11px]">Inventory</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant gap-0.5 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-sm text-[11px]">Customers</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant gap-0.5 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-sm text-[11px]">More</span>
+</button>
+</div>
+</nav>
+<script>
+        // Micro-interaction for feedback on click
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.classList.add('opacity-70');
+            });
+            button.addEventListener('touchend', function() {
+                this.classList.remove('opacity-70');
+            });
+        });
+
+        // Simple visibility observer for chart animation entry
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bg-primary, .bg-primary\\/20');
+                    bars.forEach((bar, index) => {
+                        bar.style.transition = `height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.05}s`;
+                        const targetHeight = bar.style.height || getComputedStyle(bar).height;
+                        bar.style.height = '0px';
+                        setTimeout(() => {
+                            bar.style.height = targetHeight;
+                        }, 50);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        const chartSection = document.querySelector('section:has(.h-32)');
+        if(chartSection) observer.observe(chartSection);
+    </script>
+</body></html>

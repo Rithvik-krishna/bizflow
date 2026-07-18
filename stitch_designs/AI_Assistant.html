@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BizFlow AI Assistant</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "background": "#f8f9ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary": "#0058be",
+                    "surface-bright": "#f8f9ff",
+                    "primary": "#004ac6",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-highest": "#d3e4fe",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-container": "#bdffdb",
+                    "on-secondary-container": "#fefcff",
+                    "surface-dim": "#cbdbf5",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary-container": "#eeefff",
+                    "on-background": "#0b1c30",
+                    "on-surface": "#0b1c30",
+                    "surface-container-low": "#eff4ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface": "#f8f9ff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#6ffbbe",
+                    "outline": "#737686",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container": "#e5eeff",
+                    "surface-tint": "#0053db",
+                    "on-primary-fixed": "#00174b",
+                    "secondary-container": "#2170e4",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#001a42",
+                    "on-secondary-fixed-variant": "#004395",
+                    "primary-container": "#2563eb",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary": "#006242",
+                    "tertiary-container": "#007d55",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dce9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "2xl": "48px",
+                    "sidebar-collapsed": "72px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "container-max": "1440px",
+                    "gutter": "24px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "sidebar-width": "260px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 74, 198, 0.1);
+        }
+        .glow-accent {
+            box-shadow: 0 0 15px rgba(0, 74, 198, 0.15);
+        }
+        .ai-message-gradient {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e5eeff 100%);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Sidebar Navigation (Mandatory from JSON) -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest border-r border-outline-variant flex flex-col z-50">
+<div class="px-lg py-xl">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+                BizFlow
+            </h1>
+<p class="text-label-sm text-on-surface-variant/70 mt-1">Enterprise Operations</p>
+</div>
+<nav class="flex-1 overflow-y-auto scrollbar-hide">
+<div class="px-md pb-md">
+<div class="space-y-1">
+<!-- Iterating through JSON nav labels -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-l-4 border-primary bg-surface-container-low rounded-r-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-md">AI Assistant</span>
+</a>
+</div>
+</div>
+<!-- Recent Chats Section -->
+<div class="px-lg py-md border-t border-outline-variant mt-4">
+<h3 class="text-label-sm uppercase tracking-wider text-outline font-bold mb-4">Recent Chats</h3>
+<div class="space-y-3">
+<div class="group cursor-pointer p-2 rounded-lg hover:bg-surface-container transition-all">
+<p class="text-label-md font-semibold truncate">Q4 Stock Predictions</p>
+<p class="text-label-sm text-on-surface-variant">2 hours ago</p>
+</div>
+<div class="group cursor-pointer p-2 rounded-lg hover:bg-surface-container transition-all">
+<p class="text-label-md font-semibold truncate">Supplier Risk Analysis</p>
+<p class="text-label-sm text-on-surface-variant">Yesterday</p>
+</div>
+<div class="group cursor-pointer p-2 rounded-lg hover:bg-surface-container transition-all">
+<p class="text-label-md font-semibold truncate">Logistics Optimization</p>
+<p class="text-label-sm text-on-surface-variant">Oct 12, 2023</p>
+</div>
+</div>
+</div>
+</nav>
+<div class="p-lg border-t border-outline-variant">
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                New Order
+            </button>
+</div>
+</aside>
+<!-- Top Bar (Mandatory from JSON) -->
+<header class="fixed top-0 right-0 z-40 flex justify-between items-center h-16 w-[calc(100%-260px)] ml-auto px-lg bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search across operations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 px-3 py-1.5 hover:bg-surface-container rounded-lg cursor-pointer transition-all">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female executive with a friendly smile, set against a blurred modern office background with soft blue tones. The lighting is bright and even, conveying a sense of corporate leadership and tech-savviness in a clean, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXeubaq66y4lFxSDzMUINzWZuq9iVQ3fqXZIL7iTNBjXGEHixYa9qD9s_A6BfLxKaExatt7H6W9PAXHQl5jKbpq25hkp3E-m37wg9rs1_rim3RALMT9ueY4EH51BmVQ7taSelxz5M9hLwzf-tYMeXwlFFMKKUnJgRDfabFGd66AZ1dQCEheK-9gopGrEkMryjue7IVbIF-L1TaBcms_ISZUDSI1vUL9dstRX6SAyZ9rfN-XRcYWOyTuA"/>
+</div>
+<div class="hidden lg:block">
+<p class="text-label-sm font-bold leading-none">Sarah Jenkins</p>
+<p class="text-[10px] text-on-surface-variant">Global Logistics</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[260px] pt-16 h-screen flex flex-col relative overflow-hidden">
+<!-- Background Ambient Effect -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+
+</div>
+<!-- Chat Container -->
+<div class="flex-1 overflow-y-auto p-lg space-y-6 relative z-10 scrollbar-hide" id="chat-messages">
+<!-- Welcome Message -->
+<div class="max-w-3xl mx-auto flex gap-4">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0 glow-accent">
+<span class="material-symbols-outlined text-on-primary">smart_toy</span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="ai-message-gradient p-lg rounded-2xl rounded-tl-none border border-primary/10 shadow-sm max-w-xl">
+<p class="text-body-md text-on-surface">Hello Sarah! I've updated the operational dashboard for today. We are seeing some unusual trends in the North Region's inventory flow. How can I assist you in optimizing the supply chain this morning?</p>
+</div>
+<span class="text-[10px] text-outline ml-1">BizFlow AI • 09:12 AM</span>
+</div>
+</div>
+<!-- Visualization Message -->
+<div class="max-w-3xl mx-auto flex gap-4">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0 glow-accent">
+<span class="material-symbols-outlined text-on-primary">smart_toy</span>
+</div>
+<div class="flex flex-col gap-2 w-full">
+<div class="ai-message-gradient p-lg rounded-2xl rounded-tl-none border border-primary/10 shadow-sm w-full lg:max-w-2xl">
+<p class="text-body-md font-semibold mb-4">Stock Shortage Prediction - Next 30 Days</p>
+<!-- Data Visualization Mock -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+<div class="bg-white/50 p-4 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-end mb-2">
+<p class="text-label-sm text-outline">Risk Level</p>
+<p class="text-headline-sm text-error font-bold">High</p>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-error w-[85%] h-full"></div>
+</div>
+</div>
+<div class="bg-white/50 p-4 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-end mb-2">
+<p class="text-label-sm text-outline">Confidence</p>
+<p class="text-headline-sm text-tertiary font-bold">94%</p>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-tertiary w-[94%] h-full"></div>
+</div>
+</div>
+</div>
+<div class="bg-white/80 p-lg rounded-xl border border-primary/5 shadow-inner">
+<div class="relative overflow-hidden rounded-lg flex items-end justify-between px-4 pb-2 bg-background/50" style="height: 180px;">
+<!-- Simple Chart Mock -->
+<div class="w-8 bg-primary/20 h-[40%] rounded-t-sm"></div>
+<div class="w-8 bg-primary/20 h-[55%] rounded-t-sm"></div>
+<div class="w-8 bg-primary/40 h-[45%] rounded-t-sm"></div>
+<div class="w-8 bg-primary/60 h-[70%] rounded-t-sm"></div>
+<div class="w-8 bg-primary h-[90%] rounded-t-sm relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold bg-primary text-white px-1 rounded">Peak</div>
+</div>
+<div class="w-8 bg-primary/40 h-[30%] rounded-t-sm"></div>
+<div class="w-8 bg-primary/20 h-[25%] rounded-t-sm"></div>
+</div>
+<div class="flex justify-between mt-2 px-2 text-[10px] text-outline uppercase font-bold">
+<span>Week 1</span>
+<span>Week 2</span>
+<span>Week 3</span>
+<span>Week 4</span>
+</div>
+</div>
+</div>
+<span class="text-[10px] text-outline ml-1">BizFlow AI • 09:14 AM</span>
+</div>
+</div>
+<!-- User Message -->
+<div class="max-w-3xl mx-auto flex gap-4 flex-row-reverse">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white">person</span>
+</div>
+<div class="flex flex-col gap-2 items-end">
+<div class="bg-primary text-on-primary p-lg rounded-2xl rounded-tr-none shadow-md max-w-xl">
+<p class="text-body-md">Can you identify the specific products at highest risk in the North Region?</p>
+</div>
+<span class="text-[10px] text-outline mr-1">Sarah Jenkins • 09:15 AM</span>
+</div>
+</div>
+<!-- AI Typing Indicator -->
+<div class="max-w-3xl mx-auto flex gap-4" id="typing-indicator">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary">smart_toy</span>
+</div>
+<div class="ai-message-gradient px-4 py-3 rounded-2xl rounded-tl-none border border-primary/10 flex items-center gap-1">
+<div class="w-1.5 h-1.5 bg-primary rounded-full typing-dot"></div>
+<div class="w-1.5 h-1.5 bg-primary rounded-full typing-dot"></div>
+<div class="w-1.5 h-1.5 bg-primary rounded-full typing-dot"></div>
+</div>
+</div>
+</div>
+<!-- Input Area Wrapper -->
+<div class="p-lg bg-surface-container-lowest/50 backdrop-blur-xl border-t border-outline-variant relative z-20">
+<!-- Suggested Prompts -->
+<div class="max-w-4xl mx-auto flex flex-wrap gap-3 mb-6 overflow-x-auto scrollbar-hide pb-2">
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-primary/20 bg-white/80 hover:bg-primary/10 text-primary text-label-md font-semibold transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">inventory</span>
+                    Which products are low in stock?
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-primary/20 bg-white/80 hover:bg-primary/10 text-primary text-label-md font-semibold transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                    Show customers with pending payments
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-primary/20 bg-white/80 hover:bg-primary/10 text-primary text-label-md font-semibold transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">trending_down</span>
+                    Predict stock shortages
+                </button>
+</div>
+<!-- Main Input Field -->
+<div class="max-w-4xl mx-auto flex items-end gap-3 glass-panel p-3 rounded-2xl glow-accent">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<div class="flex-1">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-body-md resize-none py-2 placeholder:text-outline" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" placeholder="Ask BizFlow AI anything about your business..." rows="1"></textarea>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shadow-lg">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+<p class="text-center text-[10px] text-outline mt-3 font-medium uppercase tracking-widest">
+                BizFlow AI can make mistakes. Verify important operational data.
+            </p>
+</div>
+</main>
+<script>
+        // Simple auto-scroll to bottom of chat
+        const chatContainer = document.getElementById('chat-messages');
+        const scrollToBottom = () => {
+            chatContainer.scrollTo({
+                top: chatContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        };
+        
+        // Call on load and periodically for mock feel
+        window.addEventListener('load', scrollToBottom);
+
+        // Micro-interaction for input glow
+        const inputContainer = document.querySelector('.glass-panel');
+        const textarea = document.querySelector('textarea');
+        
+        textarea.addEventListener('focus', () => {
+            inputContainer.classList.add('ring-2', 'ring-primary/20');
+        });
+        
+        textarea.addEventListener('blur', () => {
+            inputContainer.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

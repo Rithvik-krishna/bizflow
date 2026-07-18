@@ -1,0 +1,378 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  SUPER_ADMIN
+  OWNER
+  MANAGER
+  INVENTORY_STAFF
+  SALES_STAFF
+  ACCOUNTANT
+  VIEWER
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING
+  CONFIRMED
+  PACKED
+  DISPATCHED
+  DELIVERED
+  CANCELLED
+}
+
+enum POStatus {
+  DRAFT
+  SENT
+  APPROVED
+  RECEIVED
+}
+
+enum TransferStatus {
+  REQUESTED
+  APPROVED
+  DISPATCHED
+  RECEIVED
+}
+
+enum MovementType {
+  IN
+  OUT
+  TRANSFER
+}
+
+enum CashbookType {
+  CASH_IN
+  CASH_OUT
+}
+
+enum CashbookCategory {
+  SALES
+  SALARY
+  PURCHASE
+  TRANSPORT
+  UTILITIES
+  OTHER
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  LEAVE
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id        String   @id @default(uuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  role      Role     @default(VIEWER)
+  branchId  String?
+  branch    Branch?  @relation(fields: [branchId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stockMovements    StockMovement[]
+  createdPOs        PurchaseOrder[]  @relation("POCreator")
+  createdSOs        SalesOrder[]     @relation("SOCreator")
+  cashbookEntries   CashbookEntry[]
+  auditLogs         AuditLog[]
+  createdTransfers  StockTransfer[]  @relation("TransferCreator")
+  approvedTransfers StockTransfer[]  @relation("TransferApprover")
+  assignedTasks     Task[]           @relation("TaskAssignee")
+  createdTasks      Task[]           @relation("TaskCreator")
+}
+
+model Branch {
+  id        String   @id @default(uuid())
+  name      String
+  location  String
+  code      String   @unique
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users            User[]
+  products         Product[]
+  cashbookEntries  CashbookEntry[]
+  auditLogs        AuditLog[]
+  sourceTransfers  StockTransfer[] @relation("SourceBranch")
+  targetTransfers  StockTransfer[] @relation("TargetBranch")
+  purchaseOrders   PurchaseOrder[]
+  salesOrders      SalesOrder[]
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  sku          String   @unique
+  name         String
+  description  String?
+  barcode      String?
+  purchasePrice Float
+  sellingPrice Float
+  stock        Int      @default(0)
+  minimumStock Int      @default(5)
+  categoryId   String
+  category     Category @relation(fields: [categoryId], references: [id])
+  supplierId   String?
+  supplier     Supplier? @relation(fields: [supplierId], references: [id])
+  branchId     String
+  branch       Branch   @relation(fields: [branchId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  stockMovements     StockMovement[]
+  purchaseOrderItems PurchaseOrderItem[]
+  salesOrderItems    SalesOrderItem[]
+  transferItems      StockTransferItem[]
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+}
+
+model StockMovement {
+  id             String       @id @default(uuid())
+  productId      String
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type           MovementType
+  quantity       Int
+  sourceBranchId String?
+  targetBranchId String?
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  reason         String?
+  timestamp      DateTime     @default(now())
+}
+
+model Customer {
+  id                String   @id @default(uuid())
+  name              String
+  phone             String
+  email             String?
+  address           String?
+  gstNumber         String?
+  creditLimit       Float    @default(0.0)
+  outstandingAmount Float    @default(0.0)
+  healthScore       Float    @default(100.0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  ledgers     CustomerLedger[]
+  salesOrders SalesOrder[]
+  timeline    CustomerTimelineEvent[]
+}
+
+model CustomerLedger {
+  id          String   @id @default(uuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  type        String   // DEBIT or CREDIT
+  amount      Float
+  description String
+  timestamp   DateTime @default(now())
+  referenceId String?
+}
+
+model CustomerTimelineEvent {
+  id          String   @id @default(uuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  type        String   // PAYMENT, ORDER, WHATSAPP, LEDGER_UPDATE
+  title       String
+  description String
+  timestamp   DateTime @default(now())
+}
+
+model Supplier {
+  id                String   @id @default(uuid())
+  name              String
+  contactPerson     String?
+  phone             String
+  email             String?
+  address           String?
+  gstNumber         String?
+  outstandingAmount Float    @default(0.0)
+  performanceRating Float    @default(5.0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  products       Product[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id          String   @id @default(uuid())
+  supplierId  String
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
+  branchId    String
+  branch      Branch   @relation(fields: [branchId], references: [id])
+  status      POStatus @default(DRAFT)
+  totalAmount Float    @default(0.0)
+  creatorId   String
+  creator     User     @relation("POCreator", fields: [creatorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items PurchaseOrderItem[]
+}
+
+model PurchaseOrderItem {
+  id              String        @id @default(uuid())
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
+  quantity        Int
+  unitPrice       Float
+}
+
+model SalesOrder {
+  id          String      @id @default(uuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id])
+  branchId    String
+  branch      Branch      @relation(fields: [branchId], references: [id])
+  status      OrderStatus @default(DRAFT)
+  totalAmount Float       @default(0.0)
+  creatorId   String
+  creator     User        @relation("SOCreator", fields: [creatorId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  items    SalesOrderItem[]
+  invoices Invoice[]
+}
+
+model SalesOrderItem {
+  id           String     @id @default(uuid())
+  salesOrderId String
+  salesOrder   SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product    @relation(fields: [productId], references: [id])
+  quantity     Int
+  unitPrice    Float
+}
+
+model Invoice {
+  id            String   @id @default(uuid())
+  salesOrderId  String
+  salesOrder    SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
+  invoiceNumber String   @unique
+  amount        Float
+  taxAmount     Float    @default(0.0)
+  status        String   // UNPAID, PAID, PARTIAL
+  dueDate       DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model CashbookEntry {
+  id          String           @id @default(uuid())
+  type        CashbookType
+  category    CashbookCategory
+  amount      Float
+  description String
+  branchId    String
+  branch      Branch           @relation(fields: [branchId], references: [id])
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  timestamp   DateTime         @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  entityName String
+  entityId   String?
+  branchId   String?
+  branch     Branch?  @relation(fields: [branchId], references: [id])
+  reason     String?
+  timestamp  DateTime @default(now())
+}
+
+model StockTransfer {
+  id             String         @id @default(uuid())
+  sourceBranchId String
+  sourceBranch   Branch         @relation("SourceBranch", fields: [sourceBranchId], references: [id])
+  targetBranchId String
+  targetBranch   Branch         @relation("TargetBranch", fields: [targetBranchId], references: [id])
+  status         TransferStatus @default(REQUESTED)
+  creatorId      String
+  creator        User           @relation("TransferCreator", fields: [creatorId], references: [id])
+  approverId     String?
+  approver       User?          @relation("TransferApprover", fields: [approverId], references: [id])
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  items StockTransferItem[]
+}
+
+model StockTransferItem {
+  id              String        @id @default(uuid())
+  stockTransferId String
+  stockTransfer   StockTransfer @relation(fields: [stockTransferId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
+  quantity        Int
+}
+
+model Staff {
+  id        String   @id @default(uuid())
+  userId    String?  @unique
+  name      String
+  phone     String
+  role      String   
+  salary    Float    @default(0.0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendance Attendance[]
+  tasks      Task[]       @relation("TaskEmployee")
+}
+
+model Attendance {
+  id       String           @id @default(uuid())
+  staffId  String
+  staff    Staff            @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  date     DateTime
+  clockIn  DateTime
+  clockOut DateTime?
+  status   AttendanceStatus @default(PRESENT)
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  staffId     String
+  staff       Staff      @relation("TaskEmployee", fields: [staffId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  dueDate     DateTime?
+  assigneeId  String?
+  assignee    User?      @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  creatorId   String
+  creator     User       @relation("TaskCreator", fields: [creatorId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}

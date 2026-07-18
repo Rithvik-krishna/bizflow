@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BizFlow - Warehouse Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        
+        /* Custom scrollbar for enterprise feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d7;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #737686;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 4px;
+        }
+
+        .bin-cell {
+            aspect-ratio: 1;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .bin-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(195, 198, 215, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-surface": "#213145",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#bdffdb",
+                        "on-secondary-fixed": "#001a42",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-variant": "#d3e4fe",
+                        "outline": "#737686",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-tint": "#0053db",
+                        "secondary-container": "#2170e4",
+                        "tertiary-container": "#007d55",
+                        "surface-dim": "#cbdbf5",
+                        "inverse-primary": "#b4c5ff",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed-variant": "#004395",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "secondary": "#0058be",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#fefcff",
+                        "on-surface": "#0b1c30",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-primary-container": "#eeefff",
+                        "tertiary": "#006242",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#dbe1ff",
+                        "surface": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "surface-bright": "#f8f9ff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#002113",
+                        "error-container": "#ffdad6",
+                        "on-background": "#0b1c30",
+                        "surface-container-high": "#dce9ff",
+                        "outline-variant": "#c3c6d7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "2xl": "48px",
+                        "sidebar-collapsed": "72px",
+                        "sm": "8px",
+                        "sidebar-width": "260px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "container-max": "1440px",
+                        "xl": "32px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface border-r border-outline-variant shadow-sm z-50 flex flex-col p-md gap-sm">
+<div class="flex items-center gap-md px-md py-sm mb-lg">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">account_tree</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary leading-none">BizFlow</h1>
+<p class="font-label-sm text-label-sm text-outline">Enterprise OS</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Finance</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-label-md text-label-md">Multi-Branch</span>
+</a>
+<a class="flex items-center gap-md bg-secondary-container text-on-secondary-container rounded-lg px-md py-sm border-l-4 border-primary transition-all duration-150 scale-[0.98]" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">handshake</span>
+<span class="font-label-md text-label-md">Suppliers</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-label-md text-label-md">Staff</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-md text-label-md">Approvals</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-xs pt-lg border-t border-outline-variant">
+<button class="w-full bg-primary text-on-primary rounded-lg py-md px-md font-label-md flex items-center justify-center gap-sm hover:brightness-110 transition-all mb-md">
+<span class="material-symbols-outlined">add</span>
+                New Transaction
+            </button>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width h-screen flex flex-col overflow-y-auto">
+<!-- Top Navigation Bar -->
+<header class="h-16 flex justify-between items-center px-gutter sticky top-0 bg-surface/80 backdrop-blur-md border-b border-outline-variant z-40">
+<div class="flex items-center gap-xl">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-body-md">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-lg py-2 w-72 text-body-sm focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="Search bin, SKU, or rack..." type="text"/>
+</div>
+<nav class="hidden md:flex gap-lg">
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Overview</a>
+<a class="font-label-sm text-primary font-bold border-b-2 border-primary" href="#">Live Inventory</a>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Audits</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-sm"></div>
+<div class="flex items-center gap-sm cursor-pointer hover:bg-surface-container-low p-1 rounded-full pr-md transition-all">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a warehouse manager in high-visibility corporate apparel, shot in a bright modern office with warm natural lighting and soft bokeh background of a clean warehouse. The style is professional, modern, and high-fidelity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkCiPD36IY6e5eu3AaN_IffBfuLV7bIa3Wr-PLU8BYiLMHOeH5t-kBiRf-mHa2h6-qoDSmZCcURpJQ9YTSzUxvbIlFPGStztixX-fhgJs8pAJXamP6sZP8m_cBccx83waYS7pnwEN1XYanzEk2pDQYWayFAM0edI2d5p6TnEogk57rzdgYOKcWjUJkpDssVH_JLWWQnigZjGBUO9s2lf9mfTgzQEDHzLZgFL5BThk-AuUPtZYcxRpAWQ"/>
+<span class="font-label-sm text-on-surface">Alex Mercer</span>
+</div>
+</div>
+</header>
+<!-- Viewport Padding Container -->
+<div class="p-gutter flex flex-col gap-lg max-w-[1600px] mx-auto w-full">
+<!-- Page Header & Filters -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Warehouse Utilization</h2>
+<p class="text-on-surface-variant font-body-md">Real-time stock density and storage optimization map.</p>
+</div>
+<div class="flex gap-md">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-outline px-1">Branch</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-md py-2 font-label-md focus:ring-primary outline-none min-w-[180px]">
+<option>Central Distribution</option>
+<option>North Regional Hub</option>
+<option>West Coast Annex</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-outline px-1">Zone Group</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-md py-2 font-label-md focus:ring-primary outline-none min-w-[140px]">
+<option>All Zones</option>
+<option>Zone A (Frozen)</option>
+<option>Zone B (Dry)</option>
+<option>Zone C (Hazardous)</option>
+</select>
+</div>
+<button class="self-end bg-surface-container-high text-primary px-lg py-2 rounded-lg font-label-md flex items-center gap-sm hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-lg">
+<!-- KPI Row (Mobile Hidden) -->
+<div class="col-span-12 flex gap-lg overflow-x-auto pb-2 no-scrollbar">
+<div class="bg-surface border border-outline-variant p-lg rounded-xl flex-1 min-w-[240px] shadow-sm">
+<p class="font-label-sm text-outline mb-1">Total Capacity</p>
+<div class="flex items-end justify-between">
+<h3 class="font-display text-display text-on-surface">84.2%</h3>
+<span class="text-error font-label-md flex items-center bg-error-container/20 px-sm py-xs rounded-full mb-2">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
+                                Critical
+                            </span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full mt-md overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant p-lg rounded-xl flex-1 min-w-[240px] shadow-sm">
+<p class="font-label-sm text-outline mb-1">Fast Moving SKUs</p>
+<div class="flex items-end justify-between">
+<h3 class="font-display text-display text-on-surface">1,204</h3>
+<span class="text-tertiary font-label-md flex items-center bg-tertiary-container/10 px-sm py-xs rounded-full mb-2">
+                                +12%
+                            </span>
+</div>
+<p class="text-on-surface-variant text-body-sm mt-md">Zone A is high priority</p>
+</div>
+<div class="bg-surface border border-outline-variant p-lg rounded-xl flex-1 min-w-[240px] shadow-sm">
+<p class="font-label-sm text-outline mb-1">Dead Stock Vol.</p>
+<div class="flex items-end justify-between">
+<h3 class="font-display text-display text-on-surface">184</h3>
+<span class="text-on-surface-variant font-label-md flex items-center bg-surface-container-high px-sm py-xs rounded-full mb-2">
+                                Stable
+                            </span>
+</div>
+<p class="text-on-surface-variant text-body-sm mt-md">In Zone C for &gt; 90 days</p>
+</div>
+<div class="bg-surface border border-outline-variant p-lg rounded-xl flex-1 min-w-[240px] shadow-sm">
+<p class="font-label-sm text-outline mb-1">Audit Score</p>
+<div class="flex items-end justify-between">
+<h3 class="font-display text-display text-on-surface">99.1%</h3>
+<span class="text-tertiary font-label-md flex items-center bg-tertiary-container/10 px-sm py-xs rounded-full mb-2">
+<span class="material-symbols-outlined text-[16px] mr-1">verified</span>
+                                Elite
+                            </span>
+</div>
+<p class="text-on-surface-variant text-body-sm mt-md">Last checked 2h ago</p>
+</div>
+</div>
+<!-- Main Heatmap Panel -->
+<div class="col-span-12 lg:col-span-8 bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Storage Heatmap</h3>
+<div class="flex gap-2 text-label-sm">
+<div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-blue-50"></div> Empty</div>
+<div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-blue-400"></div> Optimal</div>
+<div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-blue-800"></div> Critical</div>
+</div>
+</div>
+<div class="flex bg-surface-container-low p-1 rounded-lg">
+<button class="px-md py-1 bg-white rounded shadow-sm text-label-md text-primary">Floor Plan</button>
+<button class="px-md py-1 text-label-md text-on-surface-variant">Rack View</button>
+<button class="px-md py-1 text-label-md text-on-surface-variant">3D Render</button>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-lowest p-gutter relative overflow-hidden">
+<!-- Heatmap Grid Simulation -->
+<div class="w-full h-full flex flex-col gap-lg">
+<!-- Zone A -->
+<div class="border-2 border-dashed border-primary/20 rounded-xl p-md relative">
+<span class="absolute -top-3 left-4 bg-white px-2 font-label-md text-primary">Zone A: Fast Moving</span>
+<div class="heatmap-grid">
+<!-- Dynamic Heatmap Cells -->
+<script>
+                                        const generateBins = (count, baseColor) => {
+                                            let html = '';
+                                            for(let i=0; i<count; i++) {
+                                                const density = Math.floor(Math.random() * 100);
+                                                let bgColor = 'bg-blue-50';
+                                                if(density > 85) bgColor = 'bg-blue-900';
+                                                else if(density > 65) bgColor = 'bg-blue-700';
+                                                else if(density > 45) bgColor = 'bg-blue-500';
+                                                else if(density > 25) bgColor = 'bg-blue-300';
+                                                else if(density > 10) bgColor = 'bg-blue-100';
+                                                
+                                                html += `<div class="bin-cell ${bgColor} rounded-sm" title="Bin ${i}: ${density}% Full"></div>`;
+                                            }
+                                            document.write(html);
+                                        };
+                                        generateBins(48);
+                                    </script>
+</div>
+</div>
+<div class="flex gap-lg h-full">
+<!-- Zone B -->
+<div class="flex-1 border-2 border-dashed border-outline-variant rounded-xl p-md relative">
+<span class="absolute -top-3 left-4 bg-white px-2 font-label-md text-outline">Zone B: Standard Storage</span>
+<div class="heatmap-grid">
+<script>generateBins(60);</script>
+</div>
+</div>
+<!-- Zone C -->
+<div class="w-1/4 border-2 border-dashed border-error/20 rounded-xl p-md relative">
+<span class="absolute -top-3 left-4 bg-white px-2 font-label-md text-error">Zone C: Hazardous</span>
+<div class="grid grid-cols-3 gap-2">
+<script>generateBins(15);</script>
+</div>
+</div>
+</div>
+</div>
+<!-- Heatmap Overlay Interaction Info (Floating) -->
+<div class="absolute bottom-md right-md glass-panel p-md rounded-xl shadow-lg border border-outline-variant max-w-[240px]">
+<h4 class="font-label-md text-on-surface mb-2">Location Details</h4>
+<div class="flex items-center gap-sm mb-1">
+<span class="w-2 h-2 rounded-full bg-blue-700"></span>
+<span class="text-body-sm font-label-sm">Bin A-402 (Occupied)</span>
+</div>
+<div class="text-body-sm text-on-surface-variant">
+                                SKU: BZ-2910-FLX<br/>
+                                Qty: 42 units<br/>
+                                Last Pick: 14 mins ago
+                            </div>
+</div>
+</div>
+</div>
+<!-- Secondary Data Panels (Side) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-lg">
+<!-- Distribution Chart Card -->
+<div class="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-md">Category Distribution</h3>
+<div class="flex flex-col gap-md">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-label-sm mb-1">
+<span>Electronics</span>
+<span class="font-bold">45%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full">
+<div class="bg-primary h-full w-[45%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-label-sm mb-1">
+<span>Raw Materials</span>
+<span class="font-bold">30%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full">
+<div class="bg-secondary h-full w-[30%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-label-sm mb-1">
+<span>Packaging</span>
+<span class="font-bold">15%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full">
+<div class="bg-tertiary h-full w-[15%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-label-sm mb-1">
+<span>Hazardous</span>
+<span class="font-bold">10%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full">
+<div class="bg-error h-full w-[10%]"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-lg text-primary font-label-md hover:underline">View Detailed Report</button>
+</div>
+<!-- Utilization List Card -->
+<div class="bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="p-lg border-b border-outline-variant">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Over-Utilized</h3>
+</div>
+<div class="flex flex-col divide-y divide-outline-variant overflow-y-auto max-h-[300px]">
+<div class="p-md flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<div>
+<p class="font-label-md text-on-surface">Rack A-12</p>
+<p class="text-body-sm text-outline">High Turn-over</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-error">98.2%</p>
+<p class="text-body-sm text-outline">Capacity</p>
+</div>
+</div>
+<div class="p-md flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<div>
+<p class="font-label-md text-on-surface">Rack B-08</p>
+<p class="text-body-sm text-outline">Seasonal Items</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-error">94.5%</p>
+<p class="text-body-sm text-outline">Capacity</p>
+</div>
+</div>
+<div class="p-md flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<div>
+<p class="font-label-md text-on-surface">Bin A-402</p>
+<p class="text-body-sm text-outline">Bulk Spares</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-error">92.1%</p>
+<p class="text-body-sm text-outline">Capacity</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section: Location Capacity -->
+<div class="col-span-12 bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden mb-gutter">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Storage Unit Inventory</h3>
+<div class="flex gap-md">
+<button class="bg-surface-container-low text-primary px-md py-2 rounded-lg font-label-md flex items-center gap-sm">
+<span class="material-symbols-outlined">download</span>
+                                Export CSV
+                            </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant">
+<th class="px-lg py-md font-label-sm text-outline uppercase">Location ID</th>
+<th class="px-lg py-md font-label-sm text-outline uppercase">Zone</th>
+<th class="px-lg py-md font-label-sm text-outline uppercase">Content Type</th>
+<th class="px-lg py-md font-label-sm text-outline uppercase">Dimensions</th>
+<th class="px-lg py-md font-label-sm text-outline uppercase">Weight Load</th>
+<th class="px-lg py-md font-label-sm text-outline uppercase">Utilization</th>
+<th class="px-lg py-md font-label-sm text-outline uppercase">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-md font-label-md text-primary">A-102-04</td>
+<td class="px-lg py-md text-body-sm">Zone A (Frozen)</td>
+<td class="px-lg py-md text-body-sm">Perishables</td>
+<td class="px-lg py-md text-body-sm">1.2m x 1.2m x 2.4m</td>
+<td class="px-lg py-md text-body-sm">450kg / 800kg</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-24 bg-surface-container-high h-1.5 rounded-full">
+<div class="bg-primary h-full w-[56%]"></div>
+</div>
+<span class="text-label-sm">56%</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-tertiary/10 text-tertiary px-sm py-1 rounded-full font-label-sm">Optimal</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-md font-label-md text-primary">B-405-11</td>
+<td class="px-lg py-md text-body-sm">Zone B (Dry)</td>
+<td class="px-lg py-md text-body-sm">Electronics</td>
+<td class="px-lg py-md text-body-sm">0.8m x 0.8m x 1.2m</td>
+<td class="px-lg py-md text-body-sm">120kg / 250kg</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-24 bg-surface-container-high h-1.5 rounded-full">
+<div class="bg-error h-full w-[94%]"></div>
+</div>
+<span class="text-label-sm text-error">94%</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-error/10 text-error px-sm py-1 rounded-full font-label-sm">Critical</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-md font-label-md text-primary">C-001-02</td>
+<td class="px-lg py-md text-body-sm">Zone C (Haz)</td>
+<td class="px-lg py-md text-body-sm">Chemicals</td>
+<td class="px-lg py-md text-body-sm">2.0m x 2.0m x 4.0m</td>
+<td class="px-lg py-md text-body-sm">1,200kg / 2,000kg</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-24 bg-surface-container-high h-1.5 rounded-full">
+<div class="bg-primary h-full w-[60%]"></div>
+</div>
+<span class="text-label-sm">60%</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-tertiary/10 text-tertiary px-sm py-1 rounded-full font-label-sm">Optimal</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-md font-label-md text-primary">A-502-09</td>
+<td class="px-lg py-md text-body-sm">Zone A (Frozen)</td>
+<td class="px-lg py-md text-body-sm">Dairy</td>
+<td class="px-lg py-md text-body-sm">1.2m x 1.2m x 2.4m</td>
+<td class="px-lg py-md text-body-sm">12kg / 800kg</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-24 bg-surface-container-high h-1.5 rounded-full">
+<div class="bg-outline-variant h-full w-[2%]"></div>
+</div>
+<span class="text-label-sm text-outline">2%</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-surface-container-high text-on-surface-variant px-sm py-1 rounded-full font-label-sm">Low Stock</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button - Only for Primary Transaction -->
+<div class="fixed bottom-lg right-lg z-50">
+<button class="w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<!-- Micro-interaction Scripts -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cells = document.querySelectorAll('.bin-cell');
+            cells.forEach(cell => {
+                cell.addEventListener('mouseenter', () => {
+                    // Logic to update floating panel info could go here
+                });
+            });
+
+            // Smooth entrance animation for panels
+            const panels = document.querySelectorAll('.bg-surface');
+            panels.forEach((panel, index) => {
+                panel.style.opacity = '0';
+                panel.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    panel.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    panel.style.opacity = '1';
+                    panel.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body></html>
